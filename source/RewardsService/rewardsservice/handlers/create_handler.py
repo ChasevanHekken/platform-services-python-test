@@ -10,18 +10,14 @@ class CreateHandler(tornado.web.RequestHandler):
 
     @coroutine
     def get(self):
-        client = MongoClient("mongodb", 27017)
-
-        rewards_db = client["Rewards"]
-        rewards = list(rewards_db.rewards.find({}, {"_id": 0}))
-
-        db = client["Users"]
-        # db.users.remove()
-
         emailAddress = self.get_argument("emailAddress")
         orderTotal = self.get_argument("orderTotal")
         rewardsPoints = int(float(orderTotal))
-        
+
+        client = MongoClient("mongodb", 27017)
+        rewards_db = client["Rewards"]
+        rewards = list(rewards_db.rewards.find({}, {"_id": 0}))
+
         rewardLevel = None
         nextRewardLevel = None
         for reward in rewards:
@@ -31,6 +27,8 @@ class CreateHandler(tornado.web.RequestHandler):
                 nextRewardLevel = reward
                 break
             
+        rewardsProgress = (nextRewardLevel.get("points") - rewardsPoints) / 100
+
         user_data = {
             "emailAddress": emailAddress, 
             "rewardsPoints": rewardsPoints,
@@ -38,10 +36,13 @@ class CreateHandler(tornado.web.RequestHandler):
             "rewardsTierName": rewardLevel.get("rewardName"),
             "nextRewardsTier": nextRewardLevel.get("tier"),
             "nextRewardsTierName": nextRewardLevel.get("rewardName"),
-            "nextRewadsTierProgress": "progress"
+            "nextRewadsTierProgress": rewardsProgress
         }
 
+        db = client["Users"]
+        # db.users.remove()
         db.users.insert(user_data)
         users = list(db.users.find({}, {"_id": 0}))
         chase = db.users.find({"emailAddress": "joe"})
+
         self.write(json.dumps(users))
