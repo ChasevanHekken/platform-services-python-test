@@ -23,20 +23,21 @@ class CreateHandler(tornado.web.RequestHandler):
         rewardsPoints = int(float(orderTotal))
         
         rewardLevel = None
-
+        nextRewardLevel = None
         for reward in rewards:
             if rewardsPoints >= reward.get("points"):
                 rewardLevel = reward
             elif rewardsPoints < reward.get("points"):
+                nextRewardLevel = reward
                 break
             
         user_data = {
             "emailAddress": emailAddress, 
             "rewardsPoints": rewardsPoints,
             "rewardsTier": rewardLevel.get("tier"),
-            "rewardsTierName": "name",
-            "nextRewardsTier": "next",
-            "nextRewardsTierName": "next name",
+            "rewardsTierName": rewardLevel.get("rewardName"),
+            "nextRewardsTier": nextRewardLevel.get("tier"),
+            "nextRewardsTierName": nextRewardLevel.get("rewardName"),
             "nextRewadsTierProgress": "progress"
         }
 
