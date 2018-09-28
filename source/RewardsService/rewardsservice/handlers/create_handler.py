@@ -19,14 +19,14 @@ class CreateHandler(tornado.web.RequestHandler):
         # db.users.remove()
         users = list(db.users.find({}, {"_id": 0}))
 
-        email = self.get_argument("email")
-        total = self.get_argument("total")
+        emailAddress = self.get_argument("emailAddress")
+        orderTotal = self.get_argument("orderTotal")
 
         user_data = {
-            "emailAddress": email, 
-            "rewardsPoints": total
+            "emailAddress": emailAddress, 
+            "rewardsPoints": int(float(orderTotal))
         }
 
         db.users.insert(user_data)
-        chase = db.users.find({"email": "chase"})
+        chase = db.users.find({"emailAddress": "joe"})
         self.write(dumps(chase))
