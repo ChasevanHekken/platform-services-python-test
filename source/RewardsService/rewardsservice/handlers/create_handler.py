@@ -9,6 +9,10 @@ class CreateHandler(tornado.web.RequestHandler):
     @coroutine
     def get(self):
         client = MongoClient("mongodb", 27017)
+
+        rewards_db = client["Rewards"]
+        rewards = list(rewards_db.rewards.find({}, {"_id": 0}))
+
         db = client["Users"]
         users = list(db.users.find({}, {"_id": 0}))
 
@@ -17,4 +21,4 @@ class CreateHandler(tornado.web.RequestHandler):
 
         db.users.insert({"email": email, "total": total})
 
-        self.write(json.dumps(users))
+        self.write(json.dumps(users) + json.dumps(rewards))
