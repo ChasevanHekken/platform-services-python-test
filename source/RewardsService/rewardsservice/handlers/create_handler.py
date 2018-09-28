@@ -7,9 +7,15 @@ from bson.json_util import loads
 from bson.json_util import dumps
 
 class CreateHandler(tornado.web.RequestHandler):
-    # http://localhost:7050/create?emailAddress=bob@gmail.com&orderTotal=220
+    # http://localhost:7050/create
+    # {
+    #     "emailAddress": "chase@gmail.com", 
+    #     "orderTotal": "500",
+    # }
+    # POST request
+
     @coroutine
-    def get(self):
+    def post(self):
         emailAddress = self.get_argument("emailAddress")
         orderTotal = self.get_argument("orderTotal")
         rewardsPoints = int(float(orderTotal))
