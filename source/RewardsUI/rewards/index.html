@@ -47,15 +47,17 @@
             </tr>
             </thead>
             <tbody>
+                {% for user in users_data %}
                 <tr>
-                    <td>customer01@gmail.com</td>
-                    <td>100</td>
-                    <td>A</td>
-                    <td>5% off purchase</td>
-                    <td>B</td>
-                    <td>10% off purchase</td>
-                    <td>50%</td>
+                    <td>{{ user.emailAddress }}</td>
+                    <td>{{ user.rewardsPoints }}</td>
+                    <td>{{ user.rewardsTier }}</td>
+                    <td>{{ user.rewardsTierName }}</td>
+                    <td>{{ user.nextRewardsTier }}</td>
+                    <td>{{ user.nextRewardsTierName }}</td>
+                    <td>{{ user.nextRewadsTierProgress }}</td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
