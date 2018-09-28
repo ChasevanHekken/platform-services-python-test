@@ -12,5 +12,5 @@ class FindHandler(tornado.web.RequestHandler):
     def get(self):
         client = MongoClient("mongodb", 27017)
         db = client["Users"]
-        user = db.users.find({"emailAddress": self.get_argument("emailAddress")})
+        user = db.users.find_one({"emailAddress": self.get_argument("emailAddress")})
         self.write(dumps(user))
