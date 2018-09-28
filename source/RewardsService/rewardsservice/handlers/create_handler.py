@@ -3,6 +3,8 @@ import tornado.web
 
 from pymongo import MongoClient
 from tornado.gen import coroutine
+from bson.json_util import loads
+from bson.json_util import dumps
 
 class CreateHandler(tornado.web.RequestHandler):
 
@@ -14,11 +16,17 @@ class CreateHandler(tornado.web.RequestHandler):
         rewards = list(rewards_db.rewards.find({}, {"_id": 0}))
 
         db = client["Users"]
+        # db.users.remove()
         users = list(db.users.find({}, {"_id": 0}))
 
         email = self.get_argument("email")
         total = self.get_argument("total")
 
-        db.users.insert({"email": email, "total": total})
+        user_data = {
+            "emailAddress": email, 
+            "rewardsPoints": total
+        }
 
-        self.write(json.dumps(users) + json.dumps(rewards))
+        db.users.insert(user_data)
+        chase = db.users.find({"email": "chase"})
+        self.write(dumps(chase))
