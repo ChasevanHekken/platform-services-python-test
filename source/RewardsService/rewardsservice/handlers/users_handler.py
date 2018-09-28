@@ -6,7 +6,7 @@ from tornado.gen import coroutine
 
 
 class UsersHandler(tornado.web.RequestHandler):
-
+    # http://localhost:7050/users
     @coroutine
     def get(self):
         client = MongoClient("mongodb", 27017)
