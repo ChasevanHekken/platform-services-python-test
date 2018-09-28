@@ -42,7 +42,5 @@ class CreateHandler(tornado.web.RequestHandler):
         db = client["Users"]
         # db.users.remove()
         db.users.insert(user_data)
-        users = list(db.users.find({}, {"_id": 0}))
-        chase = db.users.find({"emailAddress": "joe"})
 
-        self.write(json.dumps(users))
+        self.write(dumps(user_data))
