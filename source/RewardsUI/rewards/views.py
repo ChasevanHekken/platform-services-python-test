@@ -3,7 +3,8 @@ import requests
 
 from django.template.response import TemplateResponse
 from django.views.generic.base import TemplateView
-
+from django.shortcuts import render
+from .forms import UserForm
 
 class RewardsView(TemplateView):
     template_name = 'index.html'
@@ -13,15 +14,39 @@ class RewardsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-
-        response = requests.get("http://rewardsservice:7050/rewards")
-        context['rewards_data'] = response.json()
-
-        usersResponse = requests.get("http://rewardsservice:7050/users")
-        context['users_data'] = usersResponse.json()
+        self.refresh(context)
+        user_form = UserForm()
+        context['user_form'] = user_form
 
         return TemplateResponse(
             request,
             self.template_name,
             context
         )
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        form = UserForm(request.POST)
+        form.is_valid()
+        data = form.cleaned_data
+
+        created_user = requests.get("http://rewardsservice:7050/create?emailAddress=" + data["email"] + "&orderTotal=" + data["order"])
+
+        self.refresh(context)
+
+        return TemplateResponse(
+            request,
+            self.template_name,
+            context
+        )
+
+    def refresh(self, context):
+        response = requests.get("http://rewardsservice:7050/rewards")
+        context['rewards_data'] = response.json()
+
+        usersResponse = requests.get("http://rewardsservice:7050/users")
+        context['users_data'] = usersResponse.json()
+
+        user_form = UserForm()
+        context['user_form'] = user_form
