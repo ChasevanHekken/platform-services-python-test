@@ -8,7 +8,7 @@ __pycache__/
 
 **/data
 data/
-
+db.sqlite3
 # Distribution / packaging
 .Python
 env/
