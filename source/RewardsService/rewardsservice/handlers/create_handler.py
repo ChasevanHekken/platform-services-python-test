@@ -40,40 +40,33 @@ class CreateHandler(tornado.web.RequestHandler):
             elif rewardsPoints <= reward.get("points"):
                 nextRewardLevel = reward
                 break
-            
-        if rewardsPoints < 100:
-            user_data = {
-                "emailAddress": emailAddress, 
-                "rewardsPoints": rewardsPoints,
-                "rewardsTier": "N/A",
-                "rewardsTierName": "N/A",
-                "nextRewardsTier": "A",
-                "nextRewardsTierName": "5% off purchase",
-                "nextRewadsTierProgress": (100 - rewardsPoints) / 100
-            }
-        elif rewardsPoints >= 1000:
-            user_data = {
-                "emailAddress": emailAddress, 
-                "rewardsPoints": rewardsPoints,
-                "rewardsTier": rewardLevel.get("tier"),
-                "rewardsTierName": rewardLevel.get("rewardName"),
-                "nextRewardsTier": "N/A",
-                "nextRewardsTierName": "N/A",
-                "nextRewadsTierProgress": "N/A"
-            }
-        else:
-            user_data = {
-                "emailAddress": emailAddress, 
-                "rewardsPoints": rewardsPoints,
-                "rewardsTier": rewardLevel.get("tier"),
-                "rewardsTierName": rewardLevel.get("rewardName"),
-                "nextRewardsTier": nextRewardLevel.get("tier"),
-                "nextRewardsTierName": nextRewardLevel.get("rewardName"),
-                "nextRewadsTierProgress": (nextRewardLevel.get("points") - rewardsPoints) / 100
-            }
 
+        user_data = {
+            "emailAddress": emailAddress, 
+            "rewardsPoints": rewardsPoints,
+        }
+
+        if rewardsPoints < 100:
+            user_data["rewardsTier"] = "N/A"
+            user_data["rewardsTierName"] = "N/A",
+            user_data["nextRewardsTier"] = "A",
+            user_data["nextRewardsTierName"] = "5% off purchase",
+            user_data["nextRewadsTierProgress"] = (100 - rewardsPoints) / 100
+        elif rewardsPoints >= 1000:
+            user_data["rewardsTier"] = rewardLevel.get("tier")
+            user_data["rewardsTierName"] = rewardLevel.get("rewardName")
+            user_data["nextRewardsTier"] = "N/A"
+            user_data["nextRewardsTierName"] = "N/A"
+            user_data["nextRewadsTierProgress"] = "N/A"
+        else:
+            user_data["rewardsTier"] = rewardLevel.get("tier")
+            user_data["rewardsTierName"] = rewardLevel.get("rewardName")
+            user_data["nextRewardsTier"] = nextRewardLevel.get("tier")
+            user_data["nextRewardsTierName"] = nextRewardLevel.get("rewardName")
+            user_data["nextRewadsTierProgress"] = (nextRewardLevel.get("points") - rewardsPoints) / 100
+            
         if user:
-            user = db.users.update({"emailAddress": emailAddress}, user_data)
+            db.users.update({"emailAddress": emailAddress}, user_data)
         else:
             db.users.insert(user_data)
 
