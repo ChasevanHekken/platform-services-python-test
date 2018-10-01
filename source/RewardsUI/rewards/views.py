@@ -34,9 +34,7 @@ class RewardsView(TemplateView):
             "emailAddress": form.cleaned_data["email"],
             "orderTotal": form.cleaned_data["order"]
         }
-
-        created_user = requests.post("http://rewardsservice:7050/create?emailAddress=", data = request_body)
-
+        requests.post("http://rewardsservice:7050/create", data = request_body)
         self.refresh(context)
 
         return TemplateResponse(

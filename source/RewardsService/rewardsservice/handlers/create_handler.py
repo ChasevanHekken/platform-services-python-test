@@ -48,9 +48,9 @@ class CreateHandler(tornado.web.RequestHandler):
 
         if rewardsPoints < 100:
             user_data["rewardsTier"] = "N/A"
-            user_data["rewardsTierName"] = "N/A",
-            user_data["nextRewardsTier"] = "A",
-            user_data["nextRewardsTierName"] = "5% off purchase",
+            user_data["rewardsTierName"] = "N/A"
+            user_data["nextRewardsTier"] = "A"
+            user_data["nextRewardsTierName"] = "5% off purchase"
             user_data["nextRewadsTierProgress"] = (100 - rewardsPoints) / 100
         elif rewardsPoints >= 1000:
             user_data["rewardsTier"] = rewardLevel.get("tier")
